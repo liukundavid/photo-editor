@@ -9,102 +9,107 @@
 import UIKit
 
 public final class PhotoEditorViewController: UIViewController {
-    
     /** holding the 2 imageViews original image and drawing & stickers */
-    @IBOutlet weak var canvasView: UIView!
-    //To hold the image
+    @IBOutlet var canvasView: UIView!
+    // To hold the image
     @IBOutlet var imageView: UIImageView!
-    @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
-    //To hold the drawings and stickers
-    @IBOutlet weak var canvasImageView: UIImageView!
+    @IBOutlet var imageViewHeightConstraint: NSLayoutConstraint!
+    // To hold the drawings and stickers
+    @IBOutlet var canvasImageView: UIImageView!
 
-    @IBOutlet weak var topToolbar: UIView!
-    @IBOutlet weak var bottomToolbar: UIView!
+    @IBOutlet var topToolbar: UIView!
+    @IBOutlet var bottomToolbar: UIView!
+    @IBOutlet var textAdjustToolbar: UIView!
 
-    @IBOutlet weak var topGradient: UIView!
-    @IBOutlet weak var bottomGradient: UIView!
-    
-    @IBOutlet weak var doneButton: UIButton!
-    @IBOutlet weak var deleteView: UIView!
-    @IBOutlet weak var colorsCollectionView: UICollectionView!
-    @IBOutlet weak var colorPickerView: UIView!
-    @IBOutlet weak var colorPickerViewBottomConstraint: NSLayoutConstraint!
-    
-    //Controls
-    @IBOutlet weak var cropButton: UIButton!
-    @IBOutlet weak var stickerButton: UIButton!
-    @IBOutlet weak var drawButton: UIButton!
-    @IBOutlet weak var textButton: UIButton!
-    @IBOutlet weak var saveButton: UIButton!
-    @IBOutlet weak var shareButton: UIButton!
-    @IBOutlet weak var clearButton: UIButton!
-    
+    @IBOutlet var topGradient: UIView!
+    @IBOutlet var bottomGradient: UIView!
+
+    @IBOutlet var doneButton: UIButton!
+    @IBOutlet var deleteView: UIView!
+    @IBOutlet var colorsCollectionView: UICollectionView!
+    @IBOutlet var colorPickerView: UIView!
+    @IBOutlet var colorPickerViewBottomConstraint: NSLayoutConstraint!
+
+    // Controls
+    @IBOutlet var cropButton: UIButton!
+    @IBOutlet var stickerButton: UIButton!
+    @IBOutlet var drawButton: UIButton!
+    @IBOutlet var textButton: UIButton!
+    @IBOutlet var saveButton: UIButton!
+    @IBOutlet var shareButton: UIButton!
+    @IBOutlet var clearButton: UIButton!
+
+    @IBOutlet var fontSizeIncreaseButton: UIButton!
+    @IBOutlet var fontSizeDecreaseButton: UIButton!
+    @IBOutlet var textBackgroundColorButton: UIButton!
+    @IBOutlet var fontSizeDoneButton: UIButton!
+
     public var image: UIImage?
     /**
      Array of Stickers -UIImage- that the user will choose from
      */
-    public var stickers : [UIImage] = []
+    public var stickers: [UIImage] = []
     /**
      Array of Colors that will show while drawing or typing
      */
-    public var colors  : [UIColor] = []
-    
+    public var colors: [UIColor] = []
+
     public var photoEditorDelegate: PhotoEditorDelegate?
     var colorsCollectionViewDelegate: ColorsCollectionViewDelegate!
-    
+
     // list of controls to be hidden
-    public var hiddenControls : [control] = []
-    
+    public var hiddenControls: [control] = []
+
     var stickersVCIsVisible = false
     var drawColor: UIColor = UIColor.black
     var textColor: UIColor = UIColor.white
+    var textFont: UIFont = UIFont(name: "Helvetica", size: 30)!
     var isDrawing: Bool = false
+    var isSettingTextBackground: Bool = false
     var lastPoint: CGPoint!
     var swiped = false
     var lastPanPoint: CGPoint?
     var lastTextViewTransform: CGAffineTransform?
     var lastTextViewTransCenter: CGPoint?
-    var lastTextViewFont:UIFont?
+    var lastTextViewFont: UIFont?
     var activeTextView: UITextView?
     var imageViewToPan: UIImageView?
     var isTyping: Bool = false
-    
-    
+
     var stickersViewController: StickersViewController!
 
-    //Register Custom font before we load XIB
-    public override func loadView() {
+    // Register Custom font before we load XIB
+    override public func loadView() {
         registerFont()
         super.loadView()
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        self.setImageView(image: image!)
-        
+        setImageView(image: image!)
+
         deleteView.layer.cornerRadius = deleteView.bounds.height / 2
         deleteView.layer.borderWidth = 2.0
         deleteView.layer.borderColor = UIColor.white.cgColor
         deleteView.clipsToBounds = true
-        
+
         let edgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgeSwiped))
         edgePan.edges = .bottom
         edgePan.delegate = self
-        self.view.addGestureRecognizer(edgePan)
-        
+        view.addGestureRecognizer(edgePan)
+
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow),
                                                name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
                                                name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self,selector: #selector(keyboardWillChangeFrame(_:)),
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)),
                                                name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-        
-        
+
         configureCollectionView()
         stickersViewController = StickersViewController(nibName: "StickersViewController", bundle: Bundle(for: StickersViewController.self))
         hideControls()
     }
-    
+
     func configureCollectionView() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 30, height: 30)
@@ -119,18 +124,18 @@ public final class PhotoEditorViewController: UIViewController {
         }
         colorsCollectionView.delegate = colorsCollectionViewDelegate
         colorsCollectionView.dataSource = colorsCollectionViewDelegate
-        
+
         colorsCollectionView.register(
             UINib(nibName: "ColorCollectionViewCell", bundle: Bundle(for: ColorCollectionViewCell.self)),
             forCellWithReuseIdentifier: "ColorCollectionViewCell")
     }
-    
+
     func setImageView(image: UIImage) {
         imageView.image = image
         let size = image.suitableSize(widthLimit: UIScreen.main.bounds.width)
         imageViewHeightConstraint.constant = (size?.height)!
     }
-    
+
     func hideToolbar(hide: Bool) {
         topToolbar.isHidden = hide
         topGradient.isHidden = hide
@@ -142,15 +147,18 @@ public final class PhotoEditorViewController: UIViewController {
 extension PhotoEditorViewController: ColorDelegate {
     func didSelectColor(color: UIColor) {
         if isDrawing {
-            self.drawColor = color
+            drawColor = color
         } else if activeTextView != nil {
-            activeTextView?.textColor = color
-            textColor = color
+            if isSettingTextBackground {
+                activeTextView?.backgroundColor = color
+            } else {
+                activeTextView?.textColor = color
+                textColor = color
+            }
         }
     }
+
+    func didSelectTextBackground(on: Bool) {
+        isSettingTextBackground = on
+    }
 }
-
-
-
-
-

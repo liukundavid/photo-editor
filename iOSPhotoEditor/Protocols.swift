@@ -25,7 +25,6 @@ public protocol PhotoEditorDelegate {
     func canceledEditing()
 }
 
-
 /**
  - didSelectView
  - didSelectImage
@@ -50,5 +49,6 @@ protocol StickersViewControllerDelegate {
  - didSelectColor
  */
 protocol ColorDelegate {
+    func didSelectTextBackground(on: Bool)
     func didSelectColor(color: UIColor)
 }
