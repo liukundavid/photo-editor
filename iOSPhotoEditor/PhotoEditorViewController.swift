@@ -74,6 +74,7 @@ public final class PhotoEditorViewController: UIViewController {
     var lastTextViewFont: UIFont?
     var activeTextView: UITextView?
     var imageViewToPan: UIImageView?
+    var isEditText: Bool = false
     var isTyping: Bool = false
 
     var stickersViewController: StickersViewController!
@@ -151,6 +152,9 @@ extension PhotoEditorViewController: ColorDelegate {
         } else if activeTextView != nil {
             if isSettingTextBackground {
                 activeTextView?.backgroundColor = color
+                if let textView = activeTextView {
+                    updateTextSize(textView)
+                }
             } else {
                 activeTextView?.textColor = color
                 textColor = color

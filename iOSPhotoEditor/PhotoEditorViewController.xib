@@ -87,7 +87,7 @@
                                     <state key="normal">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="titleShadowColor" red="0.0" green="0.0" blue="0.0" alpha="0.1532266695" colorSpace="calibratedRGB"/>
-                                        <imageReference key="image" image="textformat.size.larger" catalog="system" symbolScale="large" renderingMode="hierarchical">
+                                        <imageReference key="image" image="pencil.circle" catalog="system" symbolScale="large" renderingMode="hierarchical">
                                             <hierarchicalColors>
                                                 <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color systemColor="secondaryLabelColor"/>
@@ -95,13 +95,13 @@
                                             </hierarchicalColors>
                                         </imageReference>
                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="medium" weight="regular">
-                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         </preferredSymbolConfiguration>
                                     </state>
                                     <state key="selected">
-                                        <imageReference key="image" image="character.textbox" catalog="system" symbolScale="large"/>
+                                        <imageReference key="image" image="pencil.circle.fill" catalog="system" symbolScale="large"/>
                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="medium" weight="regular">
-                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         </preferredSymbolConfiguration>
                                     </state>
                                     <connections>
@@ -415,8 +415,8 @@
         </view>
     </objects>
     <resources>
-        <image name="character.textbox" catalog="system" width="128" height="89"/>
-        <image name="textformat.size.larger" catalog="system" width="128" height="128"/>
+        <image name="pencil.circle" catalog="system" width="128" height="123"/>
+        <image name="pencil.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

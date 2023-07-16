@@ -52,6 +52,8 @@ extension PhotoEditorViewController {
 
     @IBAction func textButtonTapped(_ sender: Any) {
         isTyping = true
+        isEditText = true
+
         hideToolbar(hide: true)
         textAdjustToolbar.isHidden = false
         colorPickerView.isHidden = false
@@ -76,6 +78,7 @@ extension PhotoEditorViewController {
     }
 
     @IBAction func doneButtonTapped(_ sender: Any) {
+        isEditText = false
         view.endEditing(true)
         doneButton.isHidden = true
         colorPickerView.isHidden = true
@@ -96,13 +99,9 @@ extension PhotoEditorViewController {
                                                              height: CGFloat.greatestFiniteMagnitude))
                 textView.bounds.size = CGSize(width: textView.intrinsicContentSize.width,
                                               height: sizeToFit.height)
-            } else {
-                let sizeToFit = textView.sizeThatFits(CGSize(width: UIScreen.main.bounds.size.width,
-                                                             height: CGFloat.greatestFiniteMagnitude))
-                textView.bounds.size = CGSize(width: textView.intrinsicContentSize.width,
-                                              height: sizeToFit.height)
             }
 
+            updateTextSize(textView)
             textView.setNeedsDisplay()
         }
     }
@@ -113,17 +112,8 @@ extension PhotoEditorViewController {
                 let font = UIFont(name: textView.font!.fontName, size: textView.font!.pointSize - 2.0)
                 textView.font = font
                 lastTextViewFont = font
-                let sizeToFit = textView.sizeThatFits(CGSize(width: UIScreen.main.bounds.size.width,
-                                                             height: CGFloat.greatestFiniteMagnitude))
-                textView.bounds.size = CGSize(width: textView.intrinsicContentSize.width,
-                                              height: sizeToFit.height)
-            } else {
-                let sizeToFit = textView.sizeThatFits(CGSize(width: UIScreen.main.bounds.size.width,
-                                                             height: CGFloat.leastNormalMagnitude))
-                textView.bounds.size = CGSize(width: textView.intrinsicContentSize.width,
-                                              height: sizeToFit.height)
             }
-
+            updateTextSize(textView)
             textView.setNeedsDisplay()
         }
     }
@@ -131,10 +121,16 @@ extension PhotoEditorViewController {
     @IBAction func textBackgroundColorButtonTapped(_ sender: Any) {
         textBackgroundColorButton.isSelected = !textBackgroundColorButton.isSelected
         isSettingTextBackground = textBackgroundColorButton.isSelected
+
+        if let textView = activeTextView {
+            updateTextSize(textView)
+        }
     }
 
     @IBAction func textAdjustDoneButtonTapped(_ sender: Any) {
         view.endEditing(true)
+        textBackgroundColorButton.isSelected = false
+        isSettingTextBackground = false
         textAdjustToolbar.isHidden = true
         colorPickerView.isHidden = true
         hideToolbar(hide: false)
