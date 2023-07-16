@@ -128,6 +128,7 @@ extension PhotoEditorViewController {
 
     @IBAction func textAdjustDoneButtonTapped(_ sender: Any) {
         view.endEditing(true)
+        activeTextView = nil
         isEditText = false
         textBackgroundColorButton.isSelected = false
         isSettingTextBackground = false
