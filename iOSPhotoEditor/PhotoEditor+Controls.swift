@@ -78,7 +78,6 @@ extension PhotoEditorViewController {
     }
 
     @IBAction func doneButtonTapped(_ sender: Any) {
-        isEditText = false
         view.endEditing(true)
         doneButton.isHidden = true
         colorPickerView.isHidden = true
@@ -129,6 +128,7 @@ extension PhotoEditorViewController {
 
     @IBAction func textAdjustDoneButtonTapped(_ sender: Any) {
         view.endEditing(true)
+        isEditText = false
         textBackgroundColorButton.isSelected = false
         isSettingTextBackground = false
         textAdjustToolbar.isHidden = true
